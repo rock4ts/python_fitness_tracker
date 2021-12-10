@@ -31,6 +31,7 @@ class Training:
     M_IN_KM = 1000
     minutes_coef = 60
     training_type = ''
+    
     def __init__(self,
                  action: int,
                  duration: float,
@@ -117,8 +118,9 @@ class Swimming(Training):
 
     def get_mean_speed(self) -> float:
         """Получить среднюю скорость движения."""
-        mean_speed = (self.length_pool * self.count_pool 
-        / self.M_IN_KM / self.duration)
+        mean_speed = (
+            self.length_pool * self.count_pool / self.M_IN_KM / self.duration
+                      )
         return mean_speed
 
     def get_spent_calories(self) -> float:
