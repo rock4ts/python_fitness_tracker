@@ -7,7 +7,7 @@ from typing import ClassVar
 class InfoMessage:
     """Информационное сообщение о тренировке."""
     training_type: str
-    duration: float # duration_h учту, здесь pytest не принимает :(
+    duration: float  # duration_h учту, здесь pytest не принимает :(
     distance: float
     speed: float
     calories: float
