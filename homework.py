@@ -7,7 +7,7 @@ from typing import ClassVar
 class InfoMessage:
     """Информационное сообщение о тренировке."""
     training_type: str
-    duration: float  # duration_h учту, здесь pytest не принимает :(
+    duration: float
     distance: float
     speed: float
     calories: float
@@ -64,13 +64,13 @@ class Training:
 @dataclass
 class Running(Training):
     """Тренировка: бег."""
+    COEFF_1: int = 18
+    DEDUCTOR_1: int = 20
 
     def get_spent_calories(self) -> float:
         """Получить количество затраченных калорий при беге."""
-        COEFF_1: int = 18
-        DEDUCTOR_1: int = 20
         spent_calories = (
-            (COEFF_1 * self.get_mean_speed() - DEDUCTOR_1)
+            (self.COEFF_1 * self.get_mean_speed() - self.DEDUCTOR_1)
             * self.weight) / self.M_IN_KM * self.duration * self.TO_MINUTES
         return spent_calories
 
@@ -79,16 +79,17 @@ class Running(Training):
 class SportsWalking(Training):
     """Тренировка: спортивная ходьба."""
     height: float
+    COEFF_1: float = 0.035
+    COEFF_2: float = 0.029
+    DEGREE_1: int = 2
 
     def get_spent_calories(self) -> float:
         """Получить количество затраченных калорий при спортивной ходьбе."""
-        COEFF_1: float = 0.035
-        COEFF_2: float = 0.029
-        DEGREE_1: int = 2
+
         spent_calories = (
-            COEFF_1 * self.weight +
-            + ((self.get_mean_speed()**DEGREE_1 // self.height) * COEFF_2)
-            * self.weight) * self.duration * self.TO_MINUTES
+            self.COEFF_1 * self.weight +
+            + ((self.get_mean_speed()**self.DEGREE_1 // self.height)
+               * self.COEFF_2) * self.weight) * self.duration * self.TO_MINUTES
         return spent_calories
 
 
@@ -98,6 +99,8 @@ class Swimming(Training):
     LEN_STEP: ClassVar[float] = 1.38
     length_pool: float
     count_pool: int
+    INCREMENT_1: float = 1.1
+    COEFF_1: int = 2
 
     def get_mean_speed(self) -> float:
         """Получить среднюю скорость движения."""
@@ -107,10 +110,9 @@ class Swimming(Training):
 
     def get_spent_calories(self) -> float:
         """Получить количество затраченных калорий при плавании."""
-        INCREMENT_1: float = 1.1
-        COEFF_1: int = 2
         spent_calories = (
-            (self.get_mean_speed() + INCREMENT_1) * COEFF_1) * self.weight
+            (self.get_mean_speed() + self.INCREMENT_1)
+            * self.COEFF_1) * self.weight
         return spent_calories
 
 
@@ -127,15 +129,6 @@ def read_package(workout_type: str, data: list) -> Training:
         return training_results
     else:
         print("Wrong key.")
-
-
-# try:
-#     training_class = workout[workout_type]
-#     training_results = training_class(*data)
-#     return training_results
-# except KeyError as "Key not in workout dict.":
-#     print("Неверная аббревиатура типа тренировки.")
-# как правильней, оптимальней будет?
 
 
 def main(training: Training) -> None:
