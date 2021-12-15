@@ -1,5 +1,5 @@
 from __future__ import annotations
-from dataclasses import dataclass
+from dataclasses import asdict, dataclass
 from typing import ClassVar
 
 
@@ -19,12 +19,7 @@ class InfoMessage:
                     'Потрачено ккал: {calories:.3f}.')
 
     def get_message(self) -> str:
-        return self.INFO_MESSAGE.format(
-            training_type=self.training_type,
-            duration=self.duration,
-            distance=self.distance,
-            speed=self.speed,
-            calories=self.calories)
+        return self.INFO_MESSAGE.format(**asdict(self))
 
 
 @dataclass
@@ -38,7 +33,7 @@ class Training:
     weight: float
 
     def get_distance(self) -> float:
-        """Получить дистанцию в км для бега и ходьбы."""
+        """Получить дистанцию в км."""
         distance = self.action * self.LEN_STEP / self.M_IN_KM
         return distance
 
